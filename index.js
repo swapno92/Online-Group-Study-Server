@@ -59,6 +59,7 @@ async function run() {
           photo: updatedAssignment.photo,
           level: updatedAssignment.level,
           marks: updatedAssignment.marks,
+          date: updatedAssignment.date,
           title: updatedAssignment.title,
           description: updatedAssignment.description,
         },
@@ -78,10 +79,9 @@ async function run() {
       res.send(user);
     });
 
-  
-   app.get("/assignment/:email", async (req, res) => {
+   app.get("/assignments/:email", async (req, res) => {
       const email = req.params.email;
-      const cursor = assignmentCollection.find({ assign: email });
+      const cursor = assignmentCollection.find({ email: email });
       const result = await cursor.toArray();
       res.send(result);
     });
