@@ -56,23 +56,42 @@ async function run() {
       const updatedAssignment = req.body;
       const assignment = {
         $set: {
-          img: updatedAssignment.img,
-          assDefLevel: updatedAssignment.assDefLevel,
+          photo: updatedAssignment.photo,
+          level: updatedAssignment.level,
           marks: updatedAssignment.marks,
           title: updatedAssignment.title,
           description: updatedAssignment.description,
         },
-      }
-      const result = await assignmentCollection.updateOne(filter, assignment, options);
+      };
+      const result = await assignmentCollection.updateOne(
+        filter,
+        assignment,
+        options
+      );
       res.send(result);
     });
 
-    app.get('/assignment/:id', async(req, res)=>{
+    app.get("/assignment/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const user = await assignmentCollection.findOne(query)
-      res.send(user)
-    })
+      const query = { _id: new ObjectId(id) };
+      const user = await assignmentCollection.findOne(query);
+      res.send(user);
+    });
+
+  
+   app.get("/assignment/:email", async (req, res) => {
+      const email = req.params.email;
+      const cursor = assignmentCollection.find({ assign: email });
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+app.delete('/assignment/:id', async(req, res) =>{
+  const id = req.params.id;
+  const query = {_id: new ObjectId(id)}
+  const result = await assignmentCollection.deleteOne(query);
+  res.send(result)
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
