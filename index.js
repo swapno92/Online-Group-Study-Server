@@ -37,7 +37,10 @@ async function run() {
     });
 
     app.get("/assignment", async (req, res) => {
-      const cursor = assignmentCollection.find();
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      console.log("pagination", page, size);
+      const cursor = assignmentCollection.find().skip(page*size).limit(size);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -79,19 +82,29 @@ async function run() {
       res.send(user);
     });
 
-   app.get("/assignments/:email", async (req, res) => {
+    app.get("/assignments/:email", async (req, res) => {
       const email = req.params.email;
       const cursor = assignmentCollection.find({ email: email });
       const result = await cursor.toArray();
       res.send(result);
     });
 
-app.delete('/assignment/:id', async(req, res) =>{
-  const id = req.params.id;
-  const query = {_id: new ObjectId(id)}
-  const result = await assignmentCollection.deleteOne(query);
-  res.send(result)
-})
+    app.delete("/assignment/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await assignmentCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // app.get("/assignmentsCount", async (req, res) => {
+    //   const count = await assignmentCollection.estimatedDocumentCount();
+    //   res.send({ count });
+    // });
+
+    app.get('/assignmentsCount', async (req, res)=>{
+      const count = await assignmentCollection.estimatedDocumentCount()
+      res.send({count})
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
