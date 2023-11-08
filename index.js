@@ -23,11 +23,11 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
+    // await client.connect();
     await client.connect();
-
-    const assignmentCollection = client
-      .db("assignmentDB")
-      .collection("assignment");
+    const database = client.db("assignmentDB");
+    const assignmentCollection = database.collection("assignment");
+    const submitedFormCollectin = database.collection("submitedForm");
 
     app.post("/assignment", async (req, res) => {
       const newAssignment = req.body;
@@ -40,7 +40,10 @@ async function run() {
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
       console.log("pagination", page, size);
-      const cursor = assignmentCollection.find().skip(page*size).limit(size);
+      const cursor = assignmentCollection
+        .find()
+        .skip(page * size)
+        .limit(size);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -96,15 +99,22 @@ async function run() {
       res.send(result);
     });
 
-    // app.get("/assignmentsCount", async (req, res) => {
-    //   const count = await assignmentCollection.estimatedDocumentCount();
-    //   res.send({ count });
-    // });
+    app.get("/assignmentsCount", async (req, res) => {
+      const count = await assignmentCollection.estimatedDocumentCount();
+      res.send({ count });
+    });
 
-    app.get('/assignmentsCount', async (req, res)=>{
-      const count = await assignmentCollection.estimatedDocumentCount()
-      res.send({count})
-    })
+    // submited
+
+    app.post("/submitedForm", async (req, res) => {
+      const newSubmitin = req.body;
+      console.log(newSubmitin);
+      const result = await submitedFormCollectin.insertOne(newSubmitin);
+      res.send(result);
+    });
+
+    
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
