@@ -113,7 +113,16 @@ async function run() {
       res.send(result);
     });
 
-    
+    app.get("/submitedForm", async (req, res) => {
+      // const page = parseInt(req.query.page);
+      // const size = parseInt(req.query.size);
+      // console.log("pagination", page, size);
+      const cursor = submitedFormCollectin.find();
+      // .skip(page * size)
+      // .limit(size);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
 
     // Send a ping to confirm a successful connection
