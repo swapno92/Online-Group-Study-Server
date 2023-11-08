@@ -86,12 +86,7 @@ async function run() {
       res.send(user);
     });
 
-    app.get("/assignments/:email", async (req, res) => {
-      const email = req.params.email;
-      const cursor = assignmentCollection.find({ email: email });
-      const result = await cursor.toArray();
-      res.send(result);
-    });
+   
 
     app.delete("/assignment/:id", async (req, res) => {
       const id = req.params.id;
@@ -139,6 +134,23 @@ async function run() {
        res.send(result);
      });
 
+      app.get("/myAssignment", async (req, res) => {
+        // const page = parseInt(req.query.page);
+        // const size = parseInt(req.query.size);
+        // console.log("pagination", page, size);
+        const cursor = myAssignmentCollection.find();
+        // .skip(page * size)
+        // .limit(size);
+        const result = await cursor.toArray();
+        res.send(result);
+      });
+
+       app.get("/myAssignment/:email", async (req, res) => {
+         const email = req.params.email;
+         const cursor = myAssignmentCollection.find({ email: email });
+         const result = await cursor.toArray();
+         res.send(result);
+       });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
