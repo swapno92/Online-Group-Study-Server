@@ -28,6 +28,7 @@ async function run() {
     const database = client.db("assignmentDB");
     const assignmentCollection = database.collection("assignment");
     const submitedFormCollectin = database.collection("submitedForm");
+    const myAssignmentCollection = database.collection("myAssignment");
 
     app.post("/assignment", async (req, res) => {
       const newAssignment = req.body;
@@ -129,6 +130,13 @@ async function run() {
        const query = { _id: new ObjectId(id) };
        const user = await submitedFormCollectin.findOne(query);
        res.send(user);
+     });
+
+     app.post("/myAssignment", async (req, res) => {
+       const newMyAssignment = req.body;
+       // console.log(newSubmitin);
+       const result = await myAssignmentCollection.insertOne(newMyAssignment);
+       res.send(result);
      });
 
 
