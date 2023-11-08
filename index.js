@@ -31,7 +31,7 @@ async function run() {
 
     app.post("/assignment", async (req, res) => {
       const newAssignment = req.body;
-      console.log(newAssignment);
+      // console.log(newAssignment);
       const result = await assignmentCollection.insertOne(newAssignment);
       res.send(result);
     });
@@ -108,7 +108,7 @@ async function run() {
 
     app.post("/submitedForm", async (req, res) => {
       const newSubmitin = req.body;
-      console.log(newSubmitin);
+      // console.log(newSubmitin);
       const result = await submitedFormCollectin.insertOne(newSubmitin);
       res.send(result);
     });
@@ -123,6 +123,13 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+     app.get("/submitedForm/:id", async (req, res) => {
+       const id = req.params.id;
+       const query = { _id: new ObjectId(id) };
+       const user = await submitedFormCollectin.findOne(query);
+       res.send(user);
+     });
 
 
     // Send a ping to confirm a successful connection
