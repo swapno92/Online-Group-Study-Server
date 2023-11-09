@@ -85,14 +85,14 @@ async function run() {
     });
 
     // services
-    app.post("/assignment", logger,verifyToken, async (req, res) => {
+    app.post("/assignment", async (req, res) => {
       const newAssignment = req.body;
       // console.log(newAssignment);
       const result = await assignmentCollection.insertOne(newAssignment);
       res.send(result);
     });
 
-    app.get("/assignment", logger,verifyToken, async (req, res) => {
+    app.get("/assignment", async (req, res) => {
       console.log("coooooooooooooooook", req.cookies);
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
@@ -105,14 +105,14 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/assignment/:id", logger,verifyToken, async (req, res) => {
+    app.get("/assignment/:id",  async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await assignmentCollection.findOne(query);
       res.send(result);
     });
 
-    app.put("/assignment/:id",verifyToken, async (req, res) => {
+    app.put("/assignment/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
@@ -135,21 +135,21 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/assignment/:id",verifyToken, async (req, res) => {
+    app.get("/assignment/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const user = await assignmentCollection.findOne(query);
       res.send(user);
     });
 
-    app.delete("/assignment/:id",verifyToken, async (req, res) => {
+    app.delete("/assignment/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await assignmentCollection.deleteOne(query);
       res.send(result);
     });
 
-    app.get("/assignmentsCount",verifyToken, async (req, res) => {
+    app.get("/assignmentsCount", async (req, res) => {
       console.log("coooooooooooooooook", req.cookies);
 
       const count = await assignmentCollection.estimatedDocumentCount();
